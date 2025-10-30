@@ -6,7 +6,9 @@ import org.example.devopsdocker.model.User;
 import org.example.devopsdocker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -31,6 +33,10 @@ public class UserService {
         user.setPassword(createUserDTO.getPassword());
         User userCreated = userRepository.save(user);
         return toResponseDTO(userCreated);
+    }
+
+    public List<UserResponseDTO> findAll() {
+        return userRepository.findAll().stream().map(this::toResponseDTO).collect(java.util.stream.Collectors.toList());
     }
 
     public Optional<UserResponseDTO> findByUsername(String username) {
