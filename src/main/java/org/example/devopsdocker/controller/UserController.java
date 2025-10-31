@@ -1,6 +1,7 @@
 package org.example.devopsdocker.controller;
 
 import org.example.devopsdocker.dto.CreateUserDTO;
+import org.example.devopsdocker.dto.UpdateUserDTO;
 import org.example.devopsdocker.dto.UserResponseDTO;
 import org.example.devopsdocker.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         Optional<UserResponseDTO> user = userService.findById(id);
+        return ResponseEntity.of(user);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO updateUserDTO) {
+        Optional<UserResponseDTO> user = userService.updateUser(id, updateUserDTO);
         return ResponseEntity.of(user);
     }
 

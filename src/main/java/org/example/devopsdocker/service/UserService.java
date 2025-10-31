@@ -1,6 +1,7 @@
 package org.example.devopsdocker.service;
 
 import org.example.devopsdocker.dto.CreateUserDTO;
+import org.example.devopsdocker.dto.UpdateUserDTO;
 import org.example.devopsdocker.dto.UserResponseDTO;
 import org.example.devopsdocker.model.User;
 import org.example.devopsdocker.repository.UserRepository;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public List<UserResponseDTO> findAll() {
-        return userRepository.findAll().stream().map(this::toResponseDTO).collect(java.util.stream.Collectors.toList());
+        return userRepository.findAllByOrderByIdAsc().stream().map(this::toResponseDTO).collect(java.util.stream.Collectors.toList());
     }
 
     public Optional<UserResponseDTO> findByUsername(String username) {
@@ -50,6 +50,17 @@ public class UserService {
     public Optional<UserResponseDTO> findById(Long id) {
         return userRepository.findById(id).map(this::toResponseDTO);
     }
+
+    public Optional<UserResponseDTO> updateUser(Long id, UpdateUserDTO updateUserDTO) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    if (updateUserDTO.getUsername() != null) user.setUsername(updateUserDTO.getUsername());
+                    if (updateUserDTO.getEmail() != null) user.setEmail(updateUserDTO.getEmail());
+                    if (updateUserDTO.getPassword() != null) user.setPassword(updateUserDTO.getPassword());
+                    return userRepository.save(user);
+                }).map(this::toResponseDTO);
+    }
+
 
     public UserResponseDTO deleteUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
