@@ -19,11 +19,11 @@ public class UserService {
     }
 
     private UserResponseDTO toResponseDTO(User user) {
-        UserResponseDTO dto = new UserResponseDTO();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
-        return dto;
+        return UserResponseDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
     }
 
     public UserResponseDTO createUser(CreateUserDTO createUserDTO) {
