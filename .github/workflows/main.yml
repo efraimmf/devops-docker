@@ -50,8 +50,8 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
 
       - name: Build Docker Image
-        run: docker build -t ${{secrets.DOCKERHUB_USERNAME}}/devops:${{steps.generate_tag.outputs.sha}} .
+        run: docker build -t ${{secrets.DOCKERHUB_USERNAME}}/devops-docker:${{steps.generate_tag.outputs.sha}} .
 
       - name: Push to Docker Hub
-        run: docker push ${{secrets.DOCKERHUB_USERNAME}}/devops:${{steps.generate_tag.outputs.sha}}
+        run: docker push ${{secrets.DOCKERHUB_USERNAME}}/devops-docker:${{steps.generate_tag.outputs.sha}}
 
