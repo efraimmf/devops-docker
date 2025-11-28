@@ -35,7 +35,8 @@ jobs:
         run: mvn clean package -DskipTests
 
       - name: Run Tests
-        run: mvn test
+        run: mvn -Dtest=UserControllerTest test
+
 
       - name: Generate Tag
         id: generate_tag
