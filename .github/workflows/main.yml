@@ -37,9 +37,21 @@ jobs:
       - name: Run Tests
         run: mvn -Dtest=UserControllerTest test
 
-
       - name: Generate Tag
         id: generate_tag
         run: |
             SHA=$(echo $GITHUB_SHA | head -c7)
             echo "sha=$SHA" >> $GITHUB_OUTPUT
+      
+      - name: Login in DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: Build Docker Image
+        run: docker build -t ${{secrets.DOCKERHUB_USERNAME}}/devops-docker:${{steps.generate_tag.outputs.sha}} .
+
+      - name: Push to Docker Hub
+        run: docker push ${{secrets.DOCKERHUB_USERNAME}}/devops-docker:${{steps.generate_tag.outputs.sha}}
+
