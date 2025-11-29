@@ -84,9 +84,8 @@ jobs:
             touch .env
             echo "DOCKER_IMAGE_TAG=$TAG" >> .env
             echo "DB_USER=${{secrets.DB_USER}}" >> .env
-            echo "DB_PASSWORD=${{secrets.DB_PASSWORD}}" >> .env
+            echo "DB_PASSWORD=${{secrets.DB_PASS}}" >> .env
             echo "DB_NAME=${{secrets.DB_NAME}}" >> .env
-            echo "DB_PORT=${{secrets.DB_PORT}}" >> .env
             docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
             docker compose up -d --build
             docker container prune -f
