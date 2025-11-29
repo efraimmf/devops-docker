@@ -35,7 +35,7 @@ jobs:
         run: mvn clean package -DskipTests
 
       - name: Run Tests
-        run: mvn test
+        run: mvn -Dtest=UserControllerTest test
 
       - name: Generate Tag
         id: generate_tag
@@ -89,4 +89,7 @@ jobs:
             docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
             docker compose up -d --build
             docker container prune -f
-            docker image prune -f -a 
+            docker image prune -f -a
+            
+      - name: Run Tests
+        run: mvn test
