@@ -18,9 +18,8 @@ provider "digitalocean" {
     token = var.do_token
 }
 
-resource "digitalocean_ssh_key" "default" {
-    name = "devops-docker"
-    public_key = file(var.pub_key)
+data "digitalocean_ssh_key" "default" {
+  name = "devops-docker"
 }
 
 resource "digitalocean_droplet" "docker-server" {
@@ -28,7 +27,7 @@ resource "digitalocean_droplet" "docker-server" {
     name = "devops-docker"
     region = "nyc1"
     size = "s-1vcpu-1gb"
-    ssh_keys = [digitalocean_ssh_key.default.fingerprint]
+    ssh_keys = [data.digitalocean_ssh_key.default.id]
     user_data = file("user-data.sh")
     tags = ["terraform", "docker"]
 }
