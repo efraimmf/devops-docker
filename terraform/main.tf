@@ -5,6 +5,7 @@ terraform {
             version = ">=2.69.0"
         }
     }
+    
     cloud {
         organization = "devops_docker"
         
@@ -19,7 +20,7 @@ provider "digitalocean" {
 }
 
 data "digitalocean_ssh_key" "default" {
-  name = "devops-docker"
+    name = "devops-docker"
 }
 
 resource "digitalocean_droplet" "docker-server" {
