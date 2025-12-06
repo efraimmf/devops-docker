@@ -5,6 +5,13 @@ terraform {
             version = ">=2.69.0"
         }
     }
+    cloud {
+        organization = "devops_docker"
+        
+        workspaces {
+            name = "devops_docker"
+        }
+    }
 }
 
 provider "digitalocean" {
@@ -24,9 +31,4 @@ resource "digitalocean_droplet" "docker-server" {
     ssh_keys = [digitalocean_ssh_key.default.fingerprint]
     user_data = file("user-data.sh")
     tags = ["terraform", "docker"]
-}
-
-output "droplet_ip" {
-    value = digitalocean_droplet.docker-server.ipv4_address
-    description = "IP address of the droplet"
 }
