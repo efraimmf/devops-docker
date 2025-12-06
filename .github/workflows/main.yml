@@ -54,6 +54,44 @@ jobs:
 
       - name: Push to Docker Hub
         run: docker push ${{secrets.DOCKERHUB_USERNAME}}/devops-docker:${{steps.generate_tag.outputs.sha}}
+  
+  provision-infra:
+    name: "Provision Infrastructure"
+    runs-on: ubuntu-latest
+    outputs:
+      droplet_ip: ${{steps.get_ip.outputs.ip}}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.6.0"
+      
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: terraform init
+        env:
+          TF_TOKEN: ${{secrets.TF_TOKEN}}
+      
+      - name: Terraform Apply
+        working-directory: ./terraform
+        run: terraform apply -auto-approve
+        env:
+          TF_TOKEN: ${{secrets.TF_TOKEN}}
+          TF_VAR_do_token: ${{secrets.DO_TOKEN}}
+      
+      - name: Get Droplet IP
+        id: get_ip
+        working-directory: ./terraform
+        run: |
+          IP=$(terraform output -raw droplet_ip)
+          echo "ip=$IP" >> $GITHUB_OUTPUT
+          echo "Droplet IP: $IP"
+        env:
+          TF_TOKEN: ${{secrets.TF_TOKEN}}
 
   deploy:
     name: "Deploy on Digital Ocean"
