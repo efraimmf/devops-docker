@@ -96,7 +96,7 @@ jobs:
   deploy:
     name: "Deploy on Digital Ocean"
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, provision-infra]
 
     steps:
       - name: Checkout the source code
